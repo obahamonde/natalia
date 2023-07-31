@@ -1,0 +1,330 @@
+@import "./markdown.css";
+
+$primary: #008080;
+$secondary: #00ffff;
+$accent: #000;
+$warning: #ffbcb9;
+$error: #e4615d;
+$info: #b7d0d0;
+$success: #bef264;
+
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+html.dark {
+  background: $accent;
+  color-scheme: dark;
+}
+
+$f-title: "Roboto", sans-serif;
+$f-body: "Open Sans", sans-serif;
+
+@mixin centre($axis: "both") {
+  position: absolute;
+  @if $axis == "y" {
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
+  }
+  @if $axis == "x" {
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    transform: translateX(-50%);
+  }
+  @if $axis == "both" {
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-51%, -50%);
+    -moz-transform: translate(-51%, -50%);
+    -ms-transform: translate(-51%, -50%);
+    -o-transform: translate(-51%, -50%);
+    transform: translate(-51%, -50%);
+  }
+}
+@mixin font-size($sizeValue: 1.6, $lineHeight: 2.4) {
+  font-size: ($sizeValue * 10) + px;
+  font-size: $sizeValue + rem;
+  line-height: ($lineHeight * 10) + px;
+}
+@mixin animation($animate...) {
+  $max: length($animate);
+  $animations: "";
+
+  @for $i from 1 through $max {
+    $animations: #{$animations + nth($animate, $i)};
+
+    @if $i < $max {
+      $animations: #{$animations + ", "};
+    }
+  }
+  -webkit-animation: $animations;
+  -moz-animation: $animations;
+  -o-animation: $animations;
+  animation: $animations;
+}
+@mixin keyframes($animationName) {
+  @-webkit-keyframes #{$animationName} {
+    @content;
+  }
+  @-moz-keyframes #{$animationName} {
+    @content;
+  }
+  @-o-keyframes #{$animationName} {
+    @content;
+  }
+  @keyframes #{$animationName} {
+    @content;
+  }
+}
+
+@include keyframes(outerRotate1) {
+  0% {
+    transform: translate(-50%, -50%) rotate(0);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+@include keyframes(outerRotate2) {
+  0% {
+    transform: translate(-50%, -50%) rotate(0);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(-360deg);
+  }
+}
+
+@include keyframes(textColour) {
+  0% {
+    color: #fff;
+  }
+  100% {
+    color: $secondary;
+  }
+}
+
+.e-loadholder {
+  @include centre();
+  border: 5px solid $primary;
+  border-radius: 120px;
+  box-sizing: border-box;
+
+  &:after {
+    @include centre;
+    content: " ";
+    display: block;
+    background: $accent;
+    transform-origin: center;
+    z-index: 0;
+  }
+
+  &:after {
+    width: 100px;
+    height: 200%;
+    @include animation("outerRotate2 20s infinite linear");
+  }
+
+  .m-loader {
+    @include centre();
+    width: 200px;
+    height: 200px;
+    color: #888;
+    text-align: center;
+    border: 5px solid lighten($primary, 15%);
+    border-radius: 100px;
+    box-sizing: border-box;
+    z-index: 20;
+    text-transform: capitalize;
+
+    &:after {
+      @include centre;
+      content: " ";
+      display: block;
+      background: $accent;
+      transform-origin: center;
+      z-index: -1;
+    }
+
+    &:after {
+      width: 100px;
+      height: 106%;
+      @include animation("outerRotate1 5s infinite alternate");
+    }
+
+    .e-text {
+      @include font-size(1.4, 13);
+      @include centre();
+      @include animation("textColour 1s alternate linear infinite");
+      display: block;
+      width: 140px;
+      height: 140px;
+      text-align: center;
+      border: 5px solid lighten($primary, 25%);
+      border-radius: 70px;
+      box-sizing: border-box;
+      z-index: 20;
+
+      &:before,
+      &:after {
+        @include centre;
+        content: " ";
+        display: block;
+        background: $accent;
+        transform-origin: center;
+        z-index: -1;
+      }
+
+      &:before {
+        width: 110%;
+        height: 40px;
+        @include animation("outerRotate2 3.5s infinite linear");
+      }
+      &:after {
+        width: 40px;
+        height: 110%;
+        @include animation("outerRotate1 8s infinite linear");
+      }
+    }
+  }
+}
+
+#particleCanvas-White {
+  @include centre();
+  width: 100%;
+  height: 50%;
+  opacity: 0.1;
+}
+
+#particleCanvas-Blue {
+  @include centre();
+  width: 300px;
+  height: 300px;
+}
+
+
+.threedrotate {
+  animation: threedrotate 1.5s infinite linear;
+  transform-style: preserve-3d;
+  transform-origin: 50% 50%;
+  perspective: 1000px;
+}
+
+
+@keyframes threedrotate {
+    0% {
+        transform: rotate3d(15, 30, 45, 0deg);
+    }
+    100% {
+        transform: rotate3d(15, 30, 45, 360deg);
+    }
+}
+
+/* Apply animation to the element */
+.element {
+    animation: rotate 3s infinite linear;
+}
+
+
+  pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.hll { background-color: #ffffcc }
+.c { color: #3D7B7B; font-style: italic } /* Comment */
+.err { border: 1px solid #FF0000 } /* Error */
+.k { color: #008000; font-weight: bold } /* Keyword */
+.o { color: #666666 } /* Operator */
+.ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.cp { color: $success } /* Comment.Preproc */
+.cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.gd { color: #A00000 } /* Generic.Deleted */
+.ge { font-style: italic } /* Generic.Emph */
+.gr { color: #E40000 } /* Generic.Error */
+.gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.gi { color: #008400 } /* Generic.Inserted */
+.go { color: #717171 } /* Generic.Output */
+.gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.gs { font-weight: bold } /* Generic.Strong */
+.gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.gt { color: #0044DD } /* Generic.Traceback */
+.kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.kp { color: #008000 } /* Keyword.Pseudo */
+.kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.kt { color: $warning } /* Keyword.Type */
+.m { color: #666666 } /* Literal.Number */
+.s { color: $secondary } /* Literal.String */
+.na { color: #687822 } /* Name.Attribute */
+.nb { color: #008000 } /* Name.Builtin */
+.nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.no { color: #880000 } /* Name.Constant */
+.nd { color: #AA22FF } /* Name.Decorator */
+.ni { color: #717171; font-weight: bold } /* Name.Entity */
+.ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.nf { color: #0000FF } /* Name.Function */
+.nl { color: #767600 } /* Name.Label */
+.nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.nt { color: #008000; font-weight: bold } /* Name.Tag */
+.nv { color: #19177C } /* Name.Variable */
+.ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.w { color: #bbbbbb } /* Text.Whitespace */
+.mb { color: #666666 } /* Literal.Number.Bin */
+.mf { color: #666666 } /* Literal.Number.Float */
+.mh { color: #666666 } /* Literal.Number.Hex */
+.mi { color: #666666 } /* Literal.Number.Integer */
+.mo { color: #666666 } /* Literal.Number.Oct */
+.sa { color: $secondary } /* Literal.String.Affix */
+.sb { color: $secondary } /* Literal.String.Backtick */
+.sc { color: $secondary } /* Literal.String.Char */
+.dl { color: $secondary } /* Literal.String.Delimiter */
+.sd { color: $secondary; font-style: italic } /* Literal.String.Doc */
+.s2 { color: $secondary } /* Literal.String.Double */
+.se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.sh { color: $secondary } /* Literal.String.Heredoc */
+.si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.sx { color: #008000 } /* Literal.String.Other */
+.sr { color: #A45A77 } /* Literal.String.Regex */
+.s1 { color: $secondary } /* Literal.String.Single */
+.ss { color: #19177C } /* Literal.String.Symbol */
+.bp { color: #008000 } /* Name.Builtin.Pseudo */
+.fm { color: #0000FF } /* Name.Function.Magic */
+.vc { color: #19177C } /* Name.Variable.Class */
+.vg { color: #19177C } /* Name.Variable.Global */
+.vi { color: #19177C } /* Name.Variable.Instance */
+.vm { color: #19177C } /* Name.Variable.Magic */
+.il { color: #666666 } /* Literal.Number.Integer.Long */
+/* This is an example for Webkit browsers like Chrome and Safari */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-image: linear-gradient(to bottom, #8F8F8F, #E6E6E6 ); /* you can change these values to adjust the gradient */
+  border: 3px solid #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-image: linear-gradient(to bottom, #737373, #BFC1C2 ); /* you can change these values to adjust the gradient on hover */
+}

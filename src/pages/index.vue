@@ -1,0 +1,3 @@
+<template>
+  <Conversations />
+</template>
