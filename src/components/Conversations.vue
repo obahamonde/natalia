@@ -70,6 +70,7 @@ const fetchMessages = async (reference: string) => {
   if (!state.currentConversation) return;
   const { data } = await useFetch("/api/messages/get?id=" + reference).json();
   state.messages = unref(data).reverse() as ChatMessage[];
+
 };
 
 const wsRef = ref(null) as Ref<any>;
@@ -79,14 +80,14 @@ const sendWsMessage = async () => {
   if (!state.currentConversation) return;
   if (!ws) return;
   if (!message.value) return;
-  ws.send(message.value);
+  const messageToBeSent = message.value;
+  ws.send(messageToBeSent);
   state.messages.unshift({
     role: "user",
-    content: message.value,
+    content: messageToBeSent,
     conversation: state.currentConversation.ref,
   });
   message.value = null;
-  await fetchConversation(state.currentConversation.ref);
 };
 
 onMounted(async () => {
@@ -151,11 +152,7 @@ const wsUrl = computed(() => {
           class="text-lg text-center p-4 cp"
           @click.prevent="fetchConversation(i.ref)"
         >
-          {{
-            i.ref == state.currentConversation?.ref
-              ? state.currentConversation.title
-              : i.title
-          }}
+            {{ i.title }}
         </dibutton>
       </div>
     </div>
