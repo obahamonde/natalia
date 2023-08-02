@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Conversations, ChatMessage } from "~/types";
+import type { Namespace, ChatMessage } from "~/types";
 const { state } = useStore();
 const message = ref(null) as Ref<string | null>;
 const show = ref(true);
@@ -7,7 +7,7 @@ const receiveAudio = async (value: string) => {
   message.value = value;
 };
 const sendAudio = async () => {
-  const { data } = await useFetch("/api/audio?text=" + message.value, {
+  const { data } = await useFetch("/api/audio?mode=llm&text=" + message.value, {
     method: "POST",
   }).blob();
   message.value = null;
@@ -17,12 +17,22 @@ const sendAudio = async () => {
 };
 
 
+const forwardAudio = async (text: string) => {
+  const { data } = await useFetch("/api/audio?mode=n&text=" + text, {
+    method: "POST",
+  }).blob();
+  const audio = unref(data) as Blob;
+  const audioEl = new Audio(URL.createObjectURL(audio));
+  audioEl.play();
+}
+
+
 const createConversation = async () => {
   if (!state.user) return;
   const { data } = await useFetch(
     "/api/conversation/new?user=" + state.user.ref,
   ).json();
-  const conversation = unref(data) as Conversations;
+  const conversation = unref(data) as Namespace;
   state.currentConversation = conversation;
   await fetchConversations();
 };
@@ -31,7 +41,7 @@ const fetchConversations = async () => {
   const { data } = await useFetch(
     "/api/conversation/list?user=" + state.user!.ref,
   ).json();
-  state.conversations = unref(data).reverse() as Conversations[];
+  state.conversations = unref(data).reverse() as Namespace[];
   state.currentConversation = state.conversations[0];
   await fetchConversation(state.currentConversation.ref);
 };
@@ -50,7 +60,7 @@ const fetchConversation = async (reference: string) => {
     const { data } = await useFetch(
       "/api/conversation/get?id=" + reference,
     ).json();
-    const conversation = unref(data) as Conversations;
+    const conversation = unref(data) as Namespace;
     state.currentConversation = conversation;
     await fetchMessages(reference);
     return;
@@ -65,6 +75,7 @@ const fetchMessages = async (reference: string) => {
   ).json();
   state.messages = unref(data).reverse() as ChatMessage[];
 };
+
 
 const wsRef = ref(null) as Ref<any>;
 
@@ -130,16 +141,20 @@ const wsUrl = computed(() => {
       <template #default="{ status }">
         <main>
           <section v-if="state.messages" class="gap-4 col backdrop-blur  absolute sh mx-auto m-4 "
-            :class="show ? 'ml-96 w-3/4' : 'ml-36 w-5/6'">
-            <h1 class="text-center text-2xl p-4 text-primary dark:text-secondary">{{ state.currentConversation?.title }}
-            </h1>
-            <div v-for="i in state.messages" class="m-4 col overflow-x-scroll"
-              :class="i.role !== 'user' ? 'col start' : 'col end'">
-              <p class="m-4 text-sm p-4 cp dark:bg-accent bg-gray-900  rounded-lg w-auto"
-                :class="i.role == 'user' ? 'col end' : 'col start'">
-                <img
-                  :src="i.role == 'user' ? state.user!.picture : 'https://www.pngitem.com/pimgs/m/129-1298996_streamlabs-chatbot-logo-hd-png-download.png'"
-                  class="w-8 h-8 rounded-full" />
+                                                                            :class="show ? 'ml-96 w-4/6' : 'ml-24 w-5/6'">
+                                                          <h1 class="text-center text-2xl p-4 text-primary dark:text-secondary">{{ state.currentConversation?.title }}
+                                                          </h1>
+                                                          <div v-for="i in state.messages" class="m-4 col overflow-x-scroll"
+                                                            :class="i.role !== 'user' ? 'col start' : 'col end'">
+                                                            <p class="m-4 text-sm p-4 cp dark:bg-accent bg-gray-900  rounded-lg w-auto"
+                                                              :class="i.role == 'user' ? 'col end' : 'col start'">
+                                                              <img
+                                                                  :src="i.role == 'user' ? state.user!.picture : '/natalia.svg'"
+                                                              class="w-8 h-8 rounded-full m-4 scale cp"
+                                                              :class="i.role == 'user' ? 'col end' : 'col start'"
+                                                              @click="forwardAudio(i.content)"
+                                                               />
+                           
                 <MdMessage :html="i.content" />
               </p>
             </div>

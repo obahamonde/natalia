@@ -23,9 +23,9 @@ export interface MessageRequest {
   user: string;
   namespace: string;
   context: string;
-  withRetrieval?:boolean;
-  withFunctions?:boolean;
-  withAudio?:boolean;
+  withRetrieval?: boolean;
+  withFunctions?: boolean;
+  withAudio?: boolean;
 }
 
 export interface ChatMessage {
@@ -36,7 +36,7 @@ export interface ChatMessage {
   conversation: string;
 }
 
-export interface Conversations {
+export interface Namespace {
   messages: string[];
   title: string;
   user: string;
@@ -48,8 +48,8 @@ export interface UploadRequest {
   size: number;
   user: string;
   namespace: string;
-  bucket: "image"| "audio"| "video"| "assets"|"code"
-  file: File;  // Assuming File is the standard web API File interface
+  bucket: "image" | "audio" | "video" | "assets" | "code";
+  file: File; // Assuming File is the standard web API File interface
 }
 
 export interface Upload {
@@ -57,7 +57,7 @@ export interface Upload {
   name: string;
   key: string;
   namespace: string;
-  bucket: "image"| "audio"| "video"| "assets"|"code"
+  bucket: "image" | "audio" | "video" | "assets" | "code";
   size: number;
   contentType: string;
   lastModified: number;

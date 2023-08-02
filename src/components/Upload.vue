@@ -39,9 +39,11 @@ const { isOverDropZone } = useDropZone(dropZoneRef, onDrop);
     <div>{{ isOverDropZone ? "Drop Files" : "Drag Files" }}</div>
     <div>
       <div>
-        <small>{{ filesData.length }} file
+        <small
+          >{{ filesData.length }} file
           {{ filesData.length > 1 ? "s" : "" }} selected
-          {{ (totalSize / 1000).toFixed(2) }} KB</small>
+          {{ (totalSize / 1000).toFixed(2) }} KB</small
+        >
       </div>
     </div>
   </div>

@@ -4,6 +4,4 @@
     <Tabs />
     <RouterView />
   </main>
-
-    
 </template>

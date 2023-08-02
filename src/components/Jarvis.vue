@@ -14,25 +14,27 @@ watch(result, (newResult) => {
 </script>
 
 <template>
-<section class="bg-accent border-t border-accent-2 w-96 br fixed hover:brightness-300  x16 rf  shadow-primary shadow-lg ">
-
-  <div
-    class="br fixed mb-32 mr-32 cp hover:animate-pulse"
-    :class="isListening ? 'brightness-300' : 'brightness-100'"
-    @click="handleClick"
+  <section
+    class="bg-accent border-t border-accent-2 w-96 br fixed hover:brightness-300 x16 rf shadow-primary shadow-lg"
+    style="z-index: 9999; position: fixed"
   >
-    <div class="e-loadholder">
-      <div class="m-loader">
-        <p class="e-text">
-          <Icon
-            class="x4 m-8"
-            :icon="isListening ? 'mdi-microphone-off' : 'mdi-microphone'"
-          />
-        </p>
+    <div
+      class="br fixed mb-32 mr-32 cp hover:animate-pulse"
+      :class="isListening ? 'brightness-300' : 'brightness-100'"
+      @click="handleClick"
+    >
+      <div class="e-loadholder">
+        <div class="m-loader">
+          <p class="e-text">
+            <Icon
+              class="x4 m-8"
+              :icon="isListening ? 'mdi-microphone-off' : 'mdi-microphone'"
+            />
+          </p>
+        </div>
       </div>
+      <div id="particleCanvas-Blue"></div>
+      <div id="particleCanvas-White"></div>
     </div>
-    <div id="particleCanvas-Blue"></div>
-    <div id="particleCanvas-White"></div>
-  </div>
-</section>
+  </section>
 </template>

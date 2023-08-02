@@ -19,15 +19,14 @@ onUnmounted(() => {
   close();
 });
 
-
 watch(data, async (newData) => {
   if (!state.currentConversation) return;
   state.messages.unshift({
-    content:"",
+    content: "",
     role: "assistant",
     conversation: state.currentConversation.ref,
   });
-  const CHUNKSIZE = 1
+  const CHUNKSIZE = 1;
   for (let i = 0; i < newData.length; i += CHUNKSIZE) {
     const chunk = newData.slice(i, i + CHUNKSIZE);
     state.messages[0].content += chunk;
@@ -35,10 +34,8 @@ watch(data, async (newData) => {
   }
 });
 
-
-
 defineExpose({
-  send
+  send,
 });
 </script>
 <template>

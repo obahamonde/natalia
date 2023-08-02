@@ -9,7 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     Auth: typeof import('./components/Auth.vue')['default']
     Conversations: typeof import('./components/Conversations.vue')['default']
-    Conversatons: typeof import('./components/Conversatons.vue')['default']
+    Conversatons: typeof import("./components/Conversatons.vue")["default"]
     Dark: typeof import('./components/Dark.vue')['default']
     Jarvis: typeof import('./components/Jarvis.vue')['default']
     MdMessage: typeof import('./components/MdMessage.vue')['default']

@@ -1,7 +1,5 @@
 ---
-
 title: Understanding Anxiety More Than Just Stress
-
 ---
 
 Imagine, you're sitting in a tranquil garden when suddenly, a lion paces into your view. Fear grips you. Your heartbeat races, you get short of breath, your body is on high alert. But there's no lion. It's anxiety, and it often shows up uninvited.
@@ -37,6 +35,7 @@ Both emotional and physical symptoms can manifest from anxiety:
 What Causes Anxiety?
 
 Anxiety can stem from various factors:
+
 - Genetics: People with family members with an anxiety disorder are more likely to have one.
 - Brain Chemistry: Changes in the brain's structures and systems could lead to anxiety.
 - Personality: People with certain personality types are more prone to anxiety disorders.
