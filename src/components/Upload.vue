@@ -58,7 +58,8 @@ const upload = async (file: {
   const formData = new FormData();
   formData.append("file", file.file);
   const { data } = await useFetch(
-    `/api/assets/${state.currentConversation!.ref!}?size=${file.size
+    `/api/assets/${state.currentConversation!.ref!}?size=${
+      file.size
     }&bucket=assets&user=${state.user!.ref}`,
     {
       method: "POST",
@@ -70,28 +71,28 @@ const upload = async (file: {
 };
 </script>
 <template>
-      <div class="col center">
-        <label for="singleFile" name="file" class="dropzone" @click="handleInput">
-          <div v-if="fileData">
-            <slot :data="fileData"></slot>
-          </div>
-          <div v-else>Click to upload</div>
-          <input
-            type="file"
-            :multiple="props.multiple"
-            id="singleFile"
-            class="hidden"
-            :accept="props.accept"
-          />
-        </label>
-        <button
-          class="btn-get"
-          @click="
-            upload(fileData!);
-          $emit('close');
-          "
-        >
-        Upload
+  <div class="col center">
+    <label for="singleFile" name="file" class="dropzone" @click="handleInput">
+      <div v-if="fileData">
+        <slot :data="fileData"></slot>
+      </div>
+      <div v-else>Click to upload</div>
+      <input
+        type="file"
+        :multiple="props.multiple"
+        id="singleFile"
+        class="hidden"
+        :accept="props.accept"
+      />
+    </label>
+    <button
+      class="btn-get"
+      @click="
+        upload(fileData!);
+        $emit('close');
+      "
+    >
+      Upload
     </button>
   </div>
 </template>

@@ -33,8 +33,6 @@ watch(result, (newResult) => {
           </p>
         </div>
       </div>
-      <div id="particleCanvas-Blue"></div>
-      <div id="particleCanvas-White"></div>
     </div>
   </section>
 </template>

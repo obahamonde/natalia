@@ -4,6 +4,7 @@ title: About
 
 <div class="text-center">
   <!-- You can use Vue components inside markdown -->
+  <Icon icon="mdi-information" class="x2 text-primary text-center mx-auto" />
   <h3>About</h3>
 </div>
 
@@ -22,6 +23,8 @@ title: About
 - **Knowledge Base** Natal-IA's memory can be fed by uploading PDF books, Text Articles and even ingest whole websites in namespaced environments so it keeps multiple contexts separated.
 - **Reinforcement Learning** Natal-IA will continiously learn from her multiple knowledge bases and continuous interactions to provide the best possible experience.
 
-> > To my beloved grandmother Natalia Aldave, thanks for building a safe and healthy environment for our family so we could thrive to become the best version of ourselves and develop the best out of our capabilities. This project is dedicated to you. I apologize for being absent for so long, your beloved grandson, Oscar.
+<br>
+
+> > “To my beloved grandmother Natalia Aldave, thanks for building a safe and healthy environment for our family so we could thrive to become the best version of ourselves and develop the best out of our capabilities. This project is dedicated to you. I apologize for being absent for so long, your beloved grandson, Oscar Bahamonde.”
 
   <br>

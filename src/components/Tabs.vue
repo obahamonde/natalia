@@ -1,24 +1,38 @@
 <script setup lang="ts">
 const tabs = [
-  { name: "Home", path: "/" },
-  { name: "About", path: "/about" },
-  { name: "Content", path: "/content" },
-  { name: "Automations", path: "/automations" },
+  { name: "Home", path: "/", icon: "mdi-home" },
+  { name: "Chat", path: "/chat", icon: "mdi-chat"},
+  { name: "About", path: "/about", icon: "mdi-information" },
+  { name: "Content", path: "/content", icon: "mdi-post" },
+  { name: "Auto", path: "/automations", icon: "mdi-infinity" },
 ];
+
+const tabBeingHovered = ref(null) as Ref<string | null>;
 </script>
 <template>
-  <section class="right-0 absolute mt-24">
+  <section class="right-0 fixed mt-24">
     <img src="/logo.png" alt="Vue logo" class="x10 tr mr-2 dark:invert" />
 
-    <nav class="gap-4 p-4 rounded-lg sh col center bg-primary">
-      <div class="flex flex-col" v-for="tab in tabs" :key="tab.name">
-        <router-link
-          :to="tab.path"
-          class="text-2xl text-white hover:text-gray-300"
-        >
+    <router-link
+      :to="tab.path"
+      v-for="tab in tabs"
+      :key="tab.name"
+      :class="tabBeingHovered === tab.name ? 'w-full' : 'w-32'"
+      class="flex row center mx-4 my-2 text-2xl text-white bg-secondary px-4 py-2 rounded-lg text-center"
+      @mouseover="tabBeingHovered = tab.name"
+    >
+      <div class="flex gap-4 row center">
+        <Icon :icon="tab.icon" class="tab-icon" />
+        <div :class="tabBeingHovered === tab.name ? 'px-4 w-32' : 'hidden'">
           {{ tab.name }}
-        </router-link>
+        </div>
       </div>
-    </nav>
+    </router-link>
   </section>
 </template>
+<style scoped lang="scss">
+.router-link-active {
+  background-color: #1e1e1e;
+  color: #00ffff;
+}
+</style>

@@ -50,6 +50,8 @@ const handleDelete = async (reference: string) => {
     method: "DELETE",
   }).text();
   await fetchConversations();
+  await fetchConversation(state.currentConversation.ref);
+  await fetchMessages(state.currentConversation.ref);
 };
 
 const fetchConversation = async (reference: string) => {
@@ -142,7 +144,7 @@ const wsUrl = computed(() => {
           class="right-4 absolute text-primary hover:text-error cp scale"
           @click="handleDelete(i.ref)"
         />
-        <dibutton
+        <button
           :class="
             state.currentConversation && i.ref == state.currentConversation!.ref
               ? 'bg-accent text-white rounded-lg sh'
@@ -152,7 +154,7 @@ const wsUrl = computed(() => {
           @click.prevent="fetchConversation(i.ref)"
         >
           {{ i.title }}
-        </dibutton>
+        </button>
       </div>
     </div>
   </transition>
@@ -173,7 +175,7 @@ const wsUrl = computed(() => {
             </h1>
             <div
               v-for="i in state.messages"
-              class="m-4 col overflow-x-scroll"
+              class="m-4 col overflow-x-auto"
               :class="i.role !== 'user' ? 'col start' : 'col end'"
             >
               <p
