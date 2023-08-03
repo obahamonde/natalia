@@ -1,10 +1,10 @@
 <script setup lang="ts">
 const tabs = [
   { name: "Home", path: "/", icon: "mdi-home" },
-  { name: "Chat", path: "/chat", icon: "mdi-chat"},
+  { name: "Chat", path: "/chat", icon: "mdi-chat" },
   { name: "About", path: "/about", icon: "mdi-information" },
   { name: "Content", path: "/content", icon: "mdi-post" },
-  { name: "Auto", path: "/automations", icon: "mdi-infinity" },
+  { name: "Auto", path: "/auto", icon: "mdi-cog" },
 ];
 
 const tabBeingHovered = ref(null) as Ref<string | null>;

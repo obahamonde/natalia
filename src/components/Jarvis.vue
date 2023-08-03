@@ -15,8 +15,8 @@ watch(result, (newResult) => {
 
 <template>
   <section
-    class="bg-accent border-t border-accent-2 w-96 br fixed hover:brightness-300 x16 rf shadow-primary shadow-lg"
-    style="z-index: 9999; position: fixed"
+    class="bg-accent border-t border-accent-2 w-96 br hover:brightness-300 x16 rf shadow-primary shadow-lg"
+    style="z-index: 9999; position: absolute"
   >
     <div
       class="br fixed mb-32 mr-32 cp hover:animate-pulse"

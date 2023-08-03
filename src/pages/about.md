@@ -1,6 +1,8 @@
 ---
 title: About
 ---
+<br>
+<br>
 
 <div class="text-center">
   <!-- You can use Vue components inside markdown -->
@@ -27,4 +29,19 @@ title: About
 
 > > “To my beloved grandmother Natalia Aldave, thanks for building a safe and healthy environment for our family so we could thrive to become the best version of ourselves and develop the best out of our capabilities. This project is dedicated to you. I apologize for being absent for so long, your beloved grandson, Oscar Bahamonde.”
 
+<br>
+
+<a href="/">Go back to the homepage</a>
+
+<br>
+
+<a href="/chat">Go to the chat interface</a>
+
   <br>
+
+
+<route lang="yaml">
+  meta:
+    layout: Home
+
+</route>

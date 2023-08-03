@@ -1,7 +1,9 @@
 <template>
-  <main>
-    <Dark />
-    <Tabs />
-    <RouterView />
-  </main>
+  <Auth>
+    <main>
+      <Dark />
+      <Tabs />
+      <RouterView />
+    </main>
+  </Auth>
 </template>

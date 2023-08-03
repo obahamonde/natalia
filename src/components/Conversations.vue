@@ -179,16 +179,27 @@ const wsUrl = computed(() => {
               :class="i.role !== 'user' ? 'col start' : 'col end'"
             >
               <p
-                class="m-4 text-sm p-4 cp dark:bg-accent bg-gray-900 rounded-lg w-auto"
+                class="m-4 text-sm p-4 cp dark:bg-gray-800 bg-gray-700 rounded-lg w-auto"
                 :class="i.role == 'user' ? 'col end' : 'col start'"
               >
                 <img
-                  :src="i.role == 'user' ? state.user!.picture : '/natalia.svg'"
+                  :src="
+                    i.role == 'user'
+                      ? state.user!.picture
+                      : isDark
+                      ? '/favicon-dark.svg'
+                      : '/favicon.svg'
+                  "
                   class="w-8 h-8 rounded-full m-4 scale cp"
-                  :class="i.role == 'user' ? 'col end' : 'col start'"
+                  :class="
+                    i.role == 'user'
+                      ? 'col end'
+                      : isDark
+                      ? 'col start bg-gray-600'
+                      : 'col start bg-gray-400'
+                  "
                   @click="forwardAudio(i.content)"
                 />
-
                 <MdMessage :html="i.content" />
               </p>
             </div>
