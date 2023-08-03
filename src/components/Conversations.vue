@@ -70,7 +70,6 @@ const fetchMessages = async (reference: string) => {
   if (!state.currentConversation) return;
   const { data } = await useFetch("/api/messages/get?id=" + reference).json();
   state.messages = unref(data).reverse() as ChatMessage[];
-
 };
 
 const wsRef = ref(null) as Ref<any>;
@@ -152,7 +151,7 @@ const wsUrl = computed(() => {
           class="text-lg text-center p-4 cp"
           @click.prevent="fetchConversation(i.ref)"
         >
-            {{ i.title }}
+          {{ i.title }}
         </dibutton>
       </div>
     </div>

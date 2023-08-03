@@ -1,50 +1,97 @@
-import { UploadRequest } from '../types';
 <script setup lang="ts">
-import type { UploadRequest, Upload } from "~/types";
-const filesData = ref<
-  { name: string; size: number; contentType: string; lastModified: number }[]
->([]);
-function onDrop(files: File[] | null) {
-  filesData.value = [];
-  if (files) {
-    filesData.value = files.map((file) => ({
+const { state } = useStore();
+
+const props = defineProps({
+  multiple: {
+    type: Boolean,
+    default: false,
+  },
+  accept: {
+    type: String,
+    default: "*/*",
+  },
+});
+
+const fileData = ref<{
+  name: string;
+  size: number;
+  contentType: string;
+  lastModified: number;
+  url: string;
+  file: File;
+}>();
+
+function onDrop(file: File | null) {
+  if (!file) return;
+  if (file) {
+    fileData.value = {
       name: file.name,
       size: file.size,
       contentType: file.type,
       lastModified: file.lastModified,
-    }));
+      url: URL.createObjectURL(file),
+      file: file,
+    };
   }
 }
-const dropZoneRef = ref<HTMLElement>();
+
+const uploadFile = ref();
 
 const handleInput = () => {
   const input = document.createElement("input");
   input.type = "file";
-  input.multiple = true;
+  input.multiple = false;
   input.onchange = () => {
-    onDrop(Array.from(input.files as FileList));
+    onDrop(input.files![0]);
   };
   input.click();
 };
 
-const totalSize = computed(() => {
-  if (filesData.value.length === 0) return 0;
-  return filesData.value.reduce((acc, file) => acc + file.size, 0);
-});
-const { isOverDropZone } = useDropZone(dropZoneRef, onDrop);
+const upload = async (file: {
+  name: string;
+  size: number;
+  contentType: string;
+  lastModified: number;
+  url: string;
+  file: File;
+}) => {
+  const formData = new FormData();
+  formData.append("file", file.file);
+  const { data } = await useFetch(
+    `/api/assets/${state.currentConversation!.ref!}?size=${file.size
+    }&bucket=assets&user=${state.user!.ref}`,
+    {
+      method: "POST",
+      body: formData,
+    },
+  ).json();
+  const item = unref(data) as any;
+  uploadFile.value = item;
+};
 </script>
-
 <template>
-  <div ref="dropZoneRef" class="dropzone" dropzone @click="handleInput">
-    <div>{{ isOverDropZone ? "Drop Files" : "Drag Files" }}</div>
-    <div>
-      <div>
-        <small
-          >{{ filesData.length }} file
-          {{ filesData.length > 1 ? "s" : "" }} selected
-          {{ (totalSize / 1000).toFixed(2) }} KB</small
+      <div class="col center">
+        <label for="singleFile" name="file" class="dropzone" @click="handleInput">
+          <div v-if="fileData">
+            <slot :data="fileData"></slot>
+          </div>
+          <div v-else>Click to upload</div>
+          <input
+            type="file"
+            :multiple="props.multiple"
+            id="singleFile"
+            class="hidden"
+            :accept="props.accept"
+          />
+        </label>
+        <button
+          class="btn-get"
+          @click="
+            upload(fileData!);
+          $emit('close');
+          "
         >
-      </div>
-    </div>
+        Upload
+    </button>
   </div>
 </template>

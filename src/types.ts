@@ -63,3 +63,10 @@ export interface Upload {
   lastModified: number;
   url?: string;
 }
+
+export interface GenerateBlogPostWebsiteRequest {
+  blog_prompt: string;
+  image_prompt: string;
+  user: string;
+  namespace: string;
+}
