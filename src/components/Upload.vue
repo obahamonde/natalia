@@ -1,6 +1,4 @@
 <script setup lang="ts">
-const { state } = useStore();
-
 const props = defineProps({
   multiple: {
     type: Boolean,
@@ -9,6 +7,10 @@ const props = defineProps({
   accept: {
     type: String,
     default: "*/*",
+  },
+  bucket: {
+    type: String,
+    default: "assets",
   },
 });
 
@@ -35,8 +37,6 @@ function onDrop(file: File | null) {
   }
 }
 
-const uploadFile = ref();
-
 const handleInput = () => {
   const input = document.createElement("input");
   input.type = "file";
@@ -47,28 +47,7 @@ const handleInput = () => {
   input.click();
 };
 
-const upload = async (file: {
-  name: string;
-  size: number;
-  contentType: string;
-  lastModified: number;
-  url: string;
-  file: File;
-}) => {
-  const formData = new FormData();
-  formData.append("file", file.file);
-  const { data } = await useFetch(
-    `/api/assets/${state.currentConversation!.ref!}?size=${
-      file.size
-    }&bucket=assets&user=${state.user!.ref}`,
-    {
-      method: "POST",
-      body: formData,
-    },
-  ).json();
-  const item = unref(data) as any;
-  uploadFile.value = item;
-};
+const emit = defineEmits(["upload"]);
 </script>
 <template>
   <div class="col center">
@@ -76,7 +55,7 @@ const upload = async (file: {
       <div v-if="fileData">
         <slot :data="fileData"></slot>
       </div>
-      <div v-else>Click to upload</div>
+      <div v-else class="text-accent">Click to upload</div>
       <input
         type="file"
         :multiple="props.multiple"
@@ -85,13 +64,7 @@ const upload = async (file: {
         :accept="props.accept"
       />
     </label>
-    <button
-      class="btn-get"
-      @click="
-        upload(fileData!);
-        $emit('close');
-      "
-    >
+    <button class="btn-get" @click="emit('upload', fileData!.file)">
       Upload
     </button>
   </div>

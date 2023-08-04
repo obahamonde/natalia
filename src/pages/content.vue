@@ -3,25 +3,33 @@
     <Request :url="'/api/content?user=' + state.user.ref">
       <template #default="{ json }">
         <div v-for="post in json">
-          <p v-html="post" class="vhtml_wrapper"></p>
+          <Icon
+            icon="mdi-delete"
+            class="m-4 x2 absolute text-primary hover:text-error cp scale"
+            @click="deletePost(post.ref)"
+          />
+          <p v-html="post.content" class="vhtml_wrapper"></p>
         </div>
       </template>
     </Request>
   </section>
+  <div v-if="pdfChunks">
+    {{ pdfChunks }}
+  </div>
 
-  <main class="container col center bottom-4">
+  <main class="container col center br fixed m-2 mr-34">
     <transition name="input-fade">
       <section
-        class="col center gap-4 sh backdrop-blur-md py-2 px-4 rounded bottom-4 absolute"
+        class="col center gap-4 sh backdrop-blur-md py-2 bg-secondary px-4 rounded bottom-4 absolute"
       >
         <input
           class="input"
           v-model="input"
           @keyup.enter="useContentGenerator"
           :placeholder="
-            selected === 'BlogPost'
-              ? 'Enter a Blog Prompt'
-              : 'Enter an Audio Book Prompt'
+            selected === 'Audio Book'
+              ? 'Enter a Audio Book Prompt'
+              : 'Enter an Blog Post Prompt'
           "
         />
         <input
@@ -31,15 +39,36 @@
           @keyup.enter="useContentGenerator"
           placeholder="Generate Image"
         />
-        <Upload v-else>
+        <Upload
+          bucket="images"
+          v-else-if="selected === 'Audio Book'"
+          @upload="postPdf($event)"
+        >
           <template #default="{ data }">
-            <div>{{ data }}</div>
+            <div>
+              <p>{{ data.name }}</p>
+              <p>{{ data.contentType }}</p>
+              <p>{{ data.size }}</p>
+              <a :href="data.url" target="_blank">Download</a>
+            </div>
+
+            <select
+              v-model="state.conversations"
+              @change="fetchConversation($event.target!.value)"
+            >
+              <option
+                v-for="conversation in state.conversations"
+                :value="conversation.ref"
+              >
+                {{ conversation.title }}
+              </option>
+            </select>
           </template>
         </Upload>
 
         <select class="input text-accent dark:text-success" v-model="selected">
           <option
-            class="text-accent dark:text-success"
+            class="text-accent da rk:text-success"
             :value="v"
             v-for="v in options"
           >
@@ -61,6 +90,24 @@ const imgprompt = ref("") as Ref<string | null>;
 const selected = ref("") as Ref<string | null>;
 const options = ref(["BlogPost", "Audio Book"]);
 const blogpost = ref("") as Ref<string | null>;
+const pdfChunks = ref([]) as Ref<any[]>;
+
+const fetchConversation = async (reference: string) => {
+  const { data } = await useFetch(
+    "/api/conversation/get?id=" + reference,
+  ).json();
+  const conversation = unref(data);
+  state.currentConversation = conversation;
+};
+
+const fetchConversations = async () => {
+  const { data } = await useFetch(
+    "/api/conversation/list?user=" + state.user!.ref,
+  ).json();
+  state.conversations = unref(data).reverse();
+  state.currentConversation = state.conversations[0];
+  await fetchConversation(state.currentConversation.ref);
+};
 
 const useContentGenerator = async () => {
   if (
@@ -85,23 +132,50 @@ const useContentGenerator = async () => {
   imgprompt.value = null;
   blogpost.value = unref(data) as string;
 };
+
+const deletePost = async (post: string) => {
+  await useFetch("/api/content?id=" + post, {
+    method: "DELETE",
+  }).text();
+  const conversation = state.currentConversation;
+  state.currentConversation = null;
+  state.currentConversation = conversation;
+  window.location.reload();
+};
+
+const postPdf = async (file: File) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  const { data } = await useFetch("/api/pdf", {
+    method: "POST",
+    body: formData,
+  }).json();
+  pdfChunks.value = unref(data) as any[];
+};
+
+onMounted(async () => {
+  await fetchConversations();
+});
 </script>
 
 <style lang="scss">
 .vhtml_wrapper {
-  background: #f8f8f8 !important;
+  background: #ccc !important;
   font-size: 1.2rem;
   font-weight: 400;
   font-family: "Inter", sans-serif;
   color: #333;
   margin: 0;
   padding-left: 8em;
-  padding-right: 8em;
+  padding-right: 16em;
+  padding-top: 8em;
+  padding-bottom: 8em;
   text-align: left;
   word-break: break-word;
   overflow-wrap: break-word;
   hyphens: auto;
-  margin-bottom: 1rem;
+  margin: 1rem;
+  border-radius: 0.5rem;
 
   h1 {
     font-size: 2rem;
@@ -121,7 +195,7 @@ const useContentGenerator = async () => {
   p {
     font-family: "Inter" !important;
     line-height: 28px;
-    margin: 16px 0px;
+    margin: 48px 0px;
     text-align: left;
   }
 

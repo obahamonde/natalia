@@ -1,6 +1,7 @@
 ---
 title: About
 ---
+
 <br>
 <br>
 
@@ -38,7 +39,6 @@ title: About
 <a href="/chat">Go to the chat interface</a>
 
   <br>
-
 
 <route lang="yaml">
   meta:
