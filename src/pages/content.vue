@@ -14,7 +14,7 @@
     </Request>
   </section>
   <div v-if="pdfChunks">
-    {{ pdfChunks }}
+    {{ pdfChunks.length }} Pages Uploaded
   </div>
 
   <main class="container col center br fixed m-2 mr-34">
@@ -22,27 +22,41 @@
       <section
         class="col center gap-4 sh backdrop-blur-md py-2 bg-secondary px-4 rounded bottom-4 absolute"
       >
-        <input
+      <h1 class="text-success px-4 py-2 hover:underline cp">What do you wanna create?</h1>
+     
+        <select class="input text-accent dark:text-success" v-model="selected">
+          <option
+            class="text-accent dark:text-success"
+            :value="v"
+            v-for="v in options"
+          >
+            {{ v }}
+          </option>
+        </select>
+     
+     
+      <input
           class="input"
           v-model="input"
           @keyup.enter="useContentGenerator"
-          :placeholder="
-            selected === 'Audio Book'
-              ? 'Enter a Audio Book Prompt'
-              : 'Enter an Blog Post Prompt'
-          "
+          placeholder="Enter an Blog Post Prompt"
+          v-if="selected === 'BlogPost'"
         />
+
+
         <input
           class="input"
           v-if="selected === 'BlogPost'"
           v-model="imgprompt"
           @keyup.enter="useContentGenerator"
-          placeholder="Generate Image"
+          placeholder="Enter an image prompt"
         />
+        
         <Upload
           bucket="images"
           v-else-if="selected === 'Audio Book'"
           @upload="postPdf($event)"
+          class="backdrop-blur-md p-4 rounded col center gap-4 sh w-full"
         >
           <template #default="{ data }">
             <div>
@@ -52,29 +66,23 @@
               <a :href="data.url" target="_blank">Download</a>
             </div>
 
-            <select
-              v-model="state.conversations"
-              @change="fetchConversation($event.target!.value)"
+         
+          </template>
+        </Upload>
+           <select
+               v-if="selected === 'Audio Book'"
+              v-model="namespace"
+              class="input text-accent dark:text-success"
             >
               <option
                 v-for="conversation in state.conversations"
                 :value="conversation.ref"
+              
               >
                 {{ conversation.title }}
               </option>
             </select>
-          </template>
-        </Upload>
-
-        <select class="input text-accent dark:text-success" v-model="selected">
-          <option
-            class="text-accent da rk:text-success"
-            :value="v"
-            v-for="v in options"
-          >
-            {{ v }}
-          </option>
-        </select>
+     
       </section>
     </transition>
   </main>
@@ -91,7 +99,7 @@ const selected = ref("") as Ref<string | null>;
 const options = ref(["BlogPost", "Audio Book"]);
 const blogpost = ref("") as Ref<string | null>;
 const pdfChunks = ref([]) as Ref<any[]>;
-
+const namespace = ref(null) as Ref<string | null>;
 const fetchConversation = async (reference: string) => {
   const { data } = await useFetch(
     "/api/conversation/get?id=" + reference,
@@ -144,9 +152,10 @@ const deletePost = async (post: string) => {
 };
 
 const postPdf = async (file: File) => {
+  if (!state.currentConversation) return;
   const formData = new FormData();
   formData.append("file", file);
-  const { data } = await useFetch("/api/pdf", {
+  const { data } = await useFetch("/api/pdf?namespace="+namespace.value, {
     method: "POST",
     body: formData,
   }).json();
