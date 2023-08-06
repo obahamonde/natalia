@@ -8,7 +8,7 @@ export const useStore = defineStore("state", () => {
     token: null as string | null,
     conversations: [] as Namespace[],
     messages: [] as ChatMessage[],
-    currentConversation: null as Namespace | null,
+    currentConversation: null as Namespace | null
   });
 
   const setState = (newState: any) => {

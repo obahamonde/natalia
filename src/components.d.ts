@@ -15,6 +15,7 @@ declare module 'vue' {
     MdMessage: typeof import('./components/MdMessage.vue')['default']
     Modal: typeof import('./components/Modal.vue')['default']
     Notifier: typeof import('./components/Notifier.vue')['default']
+    PubSub: typeof import('./components/PubSub.vue')['default']
     README: typeof import("./components/README.md")["default"]
     Request: typeof import('./components/Request.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

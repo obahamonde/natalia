@@ -2,7 +2,8 @@
 import type { Namespace, ChatMessage } from "~/types";
 const { state } = useStore();
 const message = ref(null) as Ref<string | null>;
-const show = ref(true);
+const showSideBar = ref(true);
+const showChat = ref(true)
 const receiveAudio = async (value: string) => {
   message.value = value;
 };
@@ -108,20 +109,20 @@ const wsUrl = computed(() => {
   <Icon
     icon="mdi-menu"
     class="fixed top-6 left-6 text-black dark:text-white x2 scale cp"
-    @click="show = !show"
-    v-if="!show"
+    @click="showSideBar = !showSideBar"
+    v-if="!showSideBar"
   />
 
   <transition name="fade-slide">
     <div
       class="tl fixed m-4 h-full w-72 bg-gray-700 dark:bg-gray-500 z-50"
-      v-if="show"
+      v-if="showSideBar"
     >
       <h1 class="w-full px-4 py-2 text-center">
         <Icon
           icon="mdi-menu"
           class="scale cp x2 text-black dark:text-white"
-          @click="show = !show"
+          @click="showSideBar = !showSideBar"
         />
       </h1>
 
@@ -136,12 +137,12 @@ const wsUrl = computed(() => {
       </button>
       <div
         v-for="i in state.conversations"
-        class="mt-16 m-4 col center"
+        class="mt-16 m-4 p-4 col center"
         v-if="state"
       >
         <Icon
           icon="mdi-delete"
-          class="right-4 absolute text-primary hover:text-error cp scale"
+          class="text-primary hover:text-error cp scale"
           @click="handleDelete(i.ref)"
         />
         <button
@@ -160,17 +161,18 @@ const wsUrl = computed(() => {
   </transition>
 
   <transition>
-    <WebSocket :url="wsUrl" ref="wsRef" v-if="wsUrl">
+    <WebSocket :url="wsUrl" ref="wsRef" v-if="wsUrl && showChat">
       <template #default="{ status }">
         <main>
           <section
             v-if="state.messages"
             class="gap-4 col backdrop-blur absolute sh mx-auto m-4"
-            :class="show ? 'ml-96 w-4/6' : 'ml-24 w-5/6'"
+            :class="showSideBar ? 'ml-96 w-4/6' : 'ml-24 w-5/6'"
           >
             <h1
               class="text-center text-2xl p-4 text-primary dark:text-secondary"
-            >
+            > 
+            <Icon icon="mdi:window-minimize" class="scale cp x2 text-black m-4 dark:text-white" @click="showChat = !showChat" />
               {{ state.currentConversation?.title }}
             </h1>
             <div
@@ -210,6 +212,11 @@ const wsUrl = computed(() => {
         </main>
       </template>
     </WebSocket>
+    <div v-else class="col center">
+      <Icon icon="mdi:window-maximize" class="x2 scale cp dark:text-light text-accent"
+      @click="showChat = !showChat"
+      />
+    </div>
   </transition>
 
   <transition>

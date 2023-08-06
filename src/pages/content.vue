@@ -2,20 +2,20 @@
   <section class="col center" v-if="state.user && state.user.ref">
     <Request :url="'/api/content?user=' + state.user.ref">
       <template #default="{ json }">
-        <div v-for="post in json">
+        <div v-for="post in json" >
+          
           <Icon
             icon="mdi-delete"
             class="m-4 x2 absolute text-primary hover:text-error cp scale"
             @click="deletePost(post.ref)"
+           
           />
-          <p v-html="post.content" class="vhtml_wrapper"></p>
+          <p v-html="post.content" class="vhtml_wrapper"
+          ></p>
         </div>
       </template>
     </Request>
   </section>
-  <div v-if="pdfChunks">
-    {{ pdfChunks.length }} Pages Uploaded
-  </div>
 
   <main class="container col center br fixed m-2 mr-34">
     <transition name="input-fade">
@@ -73,6 +73,7 @@
                v-if="selected === 'Audio Book'"
               v-model="namespace"
               class="input text-accent dark:text-success"
+              
             >
               <option
                 v-for="conversation in state.conversations"
@@ -169,7 +170,7 @@ onMounted(async () => {
 
 <style lang="scss">
 .vhtml_wrapper {
-  background: #ccc !important;
+  background: #999 !important;
   font-size: 1.2rem;
   font-weight: 400;
   font-family: "Inter", sans-serif;
@@ -192,6 +193,8 @@ onMounted(async () => {
     font-weight: 700;
     margin-bottom: 0.5rem;
     font-family: "Inter", sans-serif;
+    text-align: center;
+    text-decoration: underline;
   }
 
   h2 {
@@ -209,9 +212,11 @@ onMounted(async () => {
   }
 
   img {
-    max-width: 6rem;
+    max-width: 16rem;
     display: block;
     margin: 0 auto;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    border-radius: 0.5rem;
   }
 
   a {
