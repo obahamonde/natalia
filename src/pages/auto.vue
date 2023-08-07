@@ -6,10 +6,11 @@ const useFunction = async () => {
   if (!message.value) return;
   if (!state.currentConversation) return;
   try {
-    const { data } = await useFetch("/api/functions?text=" + message.value + "&namespace" + state.currentConversation.ref, {
+    const namespace = state.currentConversation.ref;
+    const { data } = await useFetch(`/api/producer?namespace=${namespace}&text=` + message.value, {
       method: "POST",
-    }).json();
-    response.value = unref(data) as any;
+    }).text()
+    response.value = unref(data) as string
   } catch (e: any) {
     response.value = e.message;
   }
@@ -19,18 +20,14 @@ const useFunction = async () => {
 
 </script>
 <template>
-  <div>
-    <p>{{ state.currentConversation }}</p>
-    <p>{{ message }}</p>
-  </div>
-  <main v-if="response">
+  <pre v-if="response">
    {{ response  }}
-  </main>
+  </pre>
   <PubSub :namespace="state.currentConversation" v-if="state.currentConversation">
   <template #message="{ message }">
   <div>
 
-  {{ message }}
+  {{ JSON.parse(message) }}
 
   </div>
   </template>

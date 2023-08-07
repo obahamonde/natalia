@@ -11,6 +11,8 @@ const { data, open, close, status, send } = useWebSocket(props.url, {
   autoReconnect: true,
 });
 
+const emit = defineEmits(["receive"]);
+
 onMounted(() => {
   open();
 });
@@ -26,6 +28,7 @@ watch(data, async (newData) => {
     role: "assistant",
     conversation: state.currentConversation.ref,
   });
+  emit("receive")
   const CHUNKSIZE = 1;
   for (let i = 0; i < newData.length; i += CHUNKSIZE) {
     const chunk = newData.slice(i, i + CHUNKSIZE);

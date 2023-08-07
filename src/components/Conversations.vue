@@ -16,6 +16,7 @@ const sendAudio = async () => {
   const audioEl = new Audio(URL.createObjectURL(audio));
   audioEl.play();
 };
+const isLoading = ref(false);
 
 const forwardAudio = async (text: string) => {
   const { data } = await useFetch("/api/audio?mode=n&text=" + text, {
@@ -90,6 +91,7 @@ const sendWsMessage = async () => {
     conversation: state.currentConversation.ref,
   });
   message.value = null;
+  isLoading.value = true;
 };
 
 onMounted(async () => {
@@ -132,17 +134,17 @@ const wsUrl = computed(() => {
       >
         <Icon icon="mdi-plus" class="top-12 left-0 m-2 x2 scale cp" /><span
           class="m-4 text-lg"
-          >New Conversation</span
+          >New Namespace</span
         >
       </button>
       <div
         v-for="i in state.conversations"
-        class="mt-16 m-4 p-4 col center"
+        class="mt-16 m-4 p-4 col center sh "
         v-if="state"
       >
         <Icon
           icon="mdi-delete"
-          class="text-primary hover:text-error cp scale"
+          class="text-primary hover:text-error cp scale translate-x-24 translate-y--4"
           @click="handleDelete(i.ref)"
         />
         <button
@@ -161,7 +163,9 @@ const wsUrl = computed(() => {
   </transition>
 
   <transition>
-    <WebSocket :url="wsUrl" ref="wsRef" v-if="wsUrl && showChat">
+    <WebSocket :url="wsUrl" ref="wsRef" v-if="wsUrl && showChat" 
+    @receive="isLoading=false"
+    >
       <template #default="{ status }">
         <main>
           <section
@@ -175,10 +179,18 @@ const wsUrl = computed(() => {
             <Icon icon="mdi:window-minimize" class="scale cp x2 text-black m-4 dark:text-white" @click="showChat = !showChat" />
               {{ state.currentConversation?.title }}
             </h1>
+            
+            <div v-if="isLoading" class="m-12 row start">
+                  <Icon
+                    icon="mdi:loading"
+                    class="x2 scale cp text-primary animate-spin gap-4"
+                  /><span class="text-primary">Thinking...</span>
+                </div> 
             <div
-              v-for="i in state.messages"
+              v-for="(i) in state.messages"
               class="m-4 col overflow-x-auto"
               :class="i.role !== 'user' ? 'col start' : 'col end'"
+
             >
               <p
                 class="m-4 text-sm p-4 cp dark:bg-gray-800 bg-gray-700 rounded-lg w-auto"
@@ -202,6 +214,7 @@ const wsUrl = computed(() => {
                   "
                   @click="forwardAudio(i.content)"
                 />
+                
                 <MdMessage :html="i.content" />
               </p>
             </div>
